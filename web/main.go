@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/betNevS/gocrawler/models"
@@ -27,19 +28,18 @@ func main() {
 	Db.SingularTable(true)
 	//Db.LogMode(true)
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		// Funcs(template.FuncMap{"ShowImage": ShowImage}
 		t := template.New("index.html").Funcs(template.FuncMap{"ShowImage": ShowImage})
 		temp, err := t.ParseFiles("index.html")
 		if err != nil {
 			fmt.Println(err)
+			writer.Write([]byte(err.Error()))
+			return
 		}
-		// temp.Funcs(template.FuncMap{"ShowImage": ShowImage})
 		// 从数据库里面取数据
 		var houses []models.HouseItem
-		Db.Limit(10).Find(&houses)
-		//fmt.Println(houses)
+		Db.Find(&houses)
 		err = temp.Execute(writer, houses)
 		fmt.Println(err)
 	})
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
