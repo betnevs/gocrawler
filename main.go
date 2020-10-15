@@ -16,7 +16,7 @@ import (
 func main() {
 	startUrl := "https://www.douban.com/group/gz_rent/discussion?start=0"
 	rd := redis.NewClient(&redis.Options{Addr: "127.0.0.1:6379", Password: "", DB: 0})
-	db, err := gorm.Open("mysql", "root:666666@tcp(127.0.0.1:3306)/crawler?charset=utf8mb4&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", DSN)
 	if err != nil {
 		fmt.Println("Open mysql failed : ", err)
 		log.Fatal("Open mysql failed : ", err)
